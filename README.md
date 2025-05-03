@@ -63,7 +63,7 @@ A responsive web application to demonstrate **CRUD (Create, Read, Update, Delete
 
 ## 📸 Screenshots
 
-![Homepage](https://github.com/Arijeet04/JsonPowerDB-Mini-Project/blob/main/assests/home.png')  
+![Homepage](https://github.com/Arijeet04/JsonPowerDB-Mini-Project/blob/main/assests/home.png)  
 ![Registration](https://github.com/Arijeet04/JsonPowerDB-Mini-Project/blob/main/assests/registration.png)
 ![Search](https://github.com/Arijeet04/JsonPowerDB-Mini-Project/blob/main/assests/show.png)
 ![Update](https://github.com/Arijeet04/JsonPowerDB-Mini-Project/blob/main/assests/update.png)
