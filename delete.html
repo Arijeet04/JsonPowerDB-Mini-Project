@@ -1,19 +1,99 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Data | JPDB Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<html>
-    <head>
-        <title>Login2Explore JPDB Project</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- JPDB Commons -->
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
 
-    </head>
-    <body>
-    <center><h1>Delete Data</h1></center>
-    <center><input id="rollno" maxlength="50" placeholder="Roll No" name="rollno" type="text" /><br><br>
-        <input type="button" value="DELETE DATA" onclick="deleteData();"/></center>
-    <p id="show"></p>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #fceabb, #f8b500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #e65100;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff9800;
+            outline: none;
+        }
+
+        .btn {
+            background-color: #e65100;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background-color: #bf360c;
+        }
+
+        #show {
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Delete Candidate Record</h1>
+        <input id="rollno" name="rollno" type="text" placeholder="Enter Roll No" maxlength="50" />
+        <button class="btn" onclick="deleteData()">🗑️ Delete Data</button>
+        <p id="show"></p>
+    </div>
+
     <script>
         function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
             var url = dbBaseUrl + apiEndPointUrl;
@@ -26,21 +106,26 @@
             });
             return jsonObj;
         }
-        function deleteData(){
-            var token = "90934697|-31949205756092170|90956214";
-            var dbname = "CourseData";
-            var relationName = "Candidate-Data";
-            var roll = parseInt(document.getElementById("rollno").value);
 
-            var reqString = createREMOVERecordRequest(token, dbname, relationName, roll);
-            alert(reqString);
-            jQuery.ajaxSetup({async: false});
-            var resultObj = executeCommand(reqString,
-                    "http://api.login2explore.com:5577", "/api/iml");
-            jQuery.ajaxSetup({async: true});
-            alert(JSON.stringify(resultObj));
-            
+        function deleteData() {
+            const token = "90934697|-31949205756092170|90956214";
+            const dbname = "CourseData";
+            const relationName = "Candidate-Data";
+            const roll = parseInt(document.getElementById("rollno").value);
+
+            if (!roll) {
+                alert("Please enter a valid Roll No.");
+                return;
+            }
+
+            const reqString = createREMOVERecordRequest(token, dbname, relationName, roll);
+            jQuery.ajaxSetup({ async: false });
+            const resultObj = executeCommand(reqString, "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({ async: true });
+
+            document.getElementById("show").innerText = "Result: " + JSON.stringify(resultObj);
+            alert("Record Deleted Successfully!");
         }
     </script>
-    </body>
+</body>
 </html>

@@ -1,74 +1,130 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Candidate Registration | L2E Mini Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
 
-<html>
-    <head>
-        <title>L2E Mini Project</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    </head>
-    <body>
-    <center><h1>Registration</h1></center>
-    <form action="" method="post">
-        <table border="0" align="center">
-            <tbody>
-                <tr>
-                    <td><label for="name">Full Name: </label></td>
-                    <td><input id="name" maxlength="50" name="name" type="text" /></td>
-                </tr>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-                <tr>
-                    <td><label for="course">Course: </label></td>
-                    <td><input id="course" maxlength="50" name="course" type="text" /></td>
-                </tr>
+        .card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
 
-                <tr>
-                    <td><label for="branch">Branch: </label></td>
-                    <td><input id="branch" maxlength="50" name="branch" type="text" /></td>
-                </tr>
+        .card h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: #1976d2;
+        }
 
-                <tr>
-                    <td><label for="rollno">Roll no: </label></td>
-                    <td><input id="rollno" maxlength="50" name="rollno" type="text" /></td>
-                </tr>
+        label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+        }
 
-                <tr>
-                    <td><label for="email">Email Address:</label></td>
-                    <td><input id="email" maxlength="50" name="email" type="text" /></td>
-                </tr>
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            transition: border-color 0.3s ease;
+        }
 
-                <tr>
-                    <td><label for="password">Password:</label></td>
-                    <td><input id="password" maxlength="50" name="password"
-                               type="password" /></td>
-                </tr>
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #1976d2;
+            outline: none;
+        }
 
-                <tr>
-                    <td align="right"><input type="button" value="Register" onclick="registerCandidate();"/></td>
-                </tr>
+        .btn {
+            width: 100%;
+            background-color: #1976d2;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-            </tbody>
-        </table>
-    </form>
+        .btn:hover {
+            background-color: #125ca1;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Candidate Registration</h1>
+        <form action="javascript:void(0);">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" type="text" maxlength="50" required />
+
+            <label for="course">Course</label>
+            <input id="course" name="course" type="text" maxlength="50" required />
+
+            <label for="branch">Branch</label>
+            <input id="branch" name="branch" type="text" maxlength="50" required />
+
+            <label for="rollno">Roll No</label>
+            <input id="rollno" name="rollno" type="text" maxlength="50" required />
+
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="text" maxlength="50" required />
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" maxlength="50" required />
+
+            <button class="btn" onclick="registerCandidate()">Register</button>
+        </form>
+    </div>
 
     <script>
         function createPUTRequest(connToken, jsonObj, dbName, relName) {
-            var putRequest = "{\n"
-                    + "\"token\" : \""
-                    + connToken
-                    + "\","
-                    + "\"dbName\": \""
-                    + dbName
-                    + "\",\n" + "\"cmd\" : \"PUT\",\n"
-                    + "\"rel\" : \""
-                    + relName + "\","
-                    + "\"jsonStr\": \n"
-                    + jsonObj
-                    + "\n"
-                    + "}";
+            var putRequest = `{
+                "token": "${connToken}",
+                "dbName": "${dbName}",
+                "cmd": "PUT",
+                "rel": "${relName}",
+                "jsonStr": ${jsonObj}
+            }`;
             return putRequest;
         }
+
         function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
             var url = dbBaseUrl + apiEndPointUrl;
             var jsonObj;
@@ -82,40 +138,43 @@
         }
 
         function validateAndGetFormData() {
-            
-            var name = document.getElementById("name").value;
-            var course = document.getElementById("course").value;
-            var branch = document.getElementById("branch").value;
-            var roll = document.getElementById("rollno").value;
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
-            
-            var jsonStrObj = {
+            let name = $("#name").val().trim();
+            let course = $("#course").val().trim();
+            let branch = $("#branch").val().trim();
+            let roll = $("#rollno").val().trim();
+            let email = $("#email").val().trim();
+            let password = $("#password").val().trim();
+
+            if (!name || !course || !branch || !roll || !email || !password) {
+                alert("Please fill all fields.");
+                return "";
+            }
+
+            return JSON.stringify({
                 CandidateName: name,
                 Course: course,
                 Branch: branch,
                 RollNo: roll,
                 Email: email,
                 Password: password,
-            };
-            return JSON.stringify(jsonStrObj);
+            });
         }
 
         function registerCandidate() {
+            let jsonStr = validateAndGetFormData();
+            if (!jsonStr) return;
 
-            var jsonStr = validateAndGetFormData();
-            if (jsonStr === "") {
-                return;
-            }
-            var putReqStr = createPUTRequest("90934697|-31949205756092170|90956214",
-                    jsonStr, "CourseData", "Candidate-Data");
-            alert(putReqStr);
-            jQuery.ajaxSetup({async: false});
-            var resultObj = executeCommand(putReqStr,
-                    "http://api.login2explore.com:5577", "/api/iml");
-            jQuery.ajaxSetup({async: true});
-            alert( "INSERTED "+JSON.stringify(resultObj));
+            const connToken = "90934697|-31949205756092170|90956214";
+            const dbName = "CourseData";
+            const relName = "Candidate-Data";
 
+            let putReqStr = createPUTRequest(connToken, jsonStr, dbName, relName);
+
+            jQuery.ajaxSetup({ async: false });
+            let resultObj = executeCommand(putReqStr, "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({ async: true });
+
+            alert("Data Inserted Successfully: " + JSON.stringify(resultObj));
         }
     </script>
 </body>

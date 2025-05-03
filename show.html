@@ -1,18 +1,100 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show Data | JPDB Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<html>
-    <head>
-        <title>Login2Explore JPDB Project</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
-    </head>
-    <body>
-    <center><h1>Show Data</h1></center>
-    <center><input id="rollno" maxlength="50" placeholder="Roll No" name="rollno" type="text" /><br><br>
-        <input type="button" value="SHOW DATA" onclick="showData();"/></center>
-    <p id="show"></p>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- jQuery & JPDB Commons -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #f9d423, #ff4e50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
+        .input-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .btn {
+            background-color: #d84315;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #bf360c;
+        }
+
+        .data-card {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: left;
+            color: #333;
+        }
+
+        .data-card p {
+            margin: 10px 0;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Search Candidate Record</h1>
+    
+    <div class="input-box">
+        <input id="rollno" maxlength="50" placeholder="Enter Roll No" name="rollno" type="text" />
+        <button class="btn" onclick="showData()">🔍 Show Data</button>
+    </div>
+
+    <div id="show" class="data-card" style="display: none;"></div>
+
     <script>
         function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
             var url = dbBaseUrl + apiEndPointUrl;
@@ -25,30 +107,40 @@
             });
             return jsonObj;
         }
-        function showData(){
+
+        function showData() {
             var token = "90934697|-31949205756092170|90956214";
             var dbname = "CourseData";
             var relationName = "Candidate-Data";
-            var roll = document.getElementById("rollno").value;
-            var jsonStr = {
-                RollNo : roll
-            };
-            var reqString = createGETRequest(token, dbname, relationName, JSON.stringify(jsonStr));
-            alert(reqString);
-            jQuery.ajaxSetup({async: false});
-            var resultObj = executeCommand(reqString,
-                    "http://api.login2explore.com:5577", "/api/irl");
-            jQuery.ajaxSetup({async: true});
-            
-            var data = JSON.stringify(resultObj);
-            
-            var res = data.split("\"");
-            var mainContainer = document.getElementById("show");
-            mainContainer.innerHTML = "Name : " + res[18].replace("\\","") + "      Email : " + res[10].replace("\\","")
-                + "     Course : " + res[22].replace("\\","") + "        Branch : " + res[14].replace("\\", ""); 
+            var roll = document.getElementById("rollno").value.trim();
 
-            
+            if (!roll) {
+                alert("Please enter a valid Roll No.");
+                return;
+            }
+
+            var jsonStr = { RollNo: roll };
+            var reqString = createGETRequest(token, dbname, relationName, JSON.stringify(jsonStr));
+
+            jQuery.ajaxSetup({ async: false });
+            var resultObj = executeCommand(reqString, "http://api.login2explore.com:5577", "/api/irl");
+            jQuery.ajaxSetup({ async: true });
+
+            if (resultObj && resultObj.data && resultObj.data.length > 0) {
+                const record = JSON.parse(resultObj.data[0].record);
+                document.getElementById("show").style.display = "block";
+                document.getElementById("show").innerHTML = `
+                    <p><strong>Name:</strong> ${record.CandidateName}</p>
+                    <p><strong>Email:</strong> ${record.Email}</p>
+                    <p><strong>Course:</strong> ${record.Course}</p>
+                    <p><strong>Branch:</strong> ${record.Branch}</p>
+                    <p><strong>Roll No:</strong> ${record.RollNo}</p>
+                `;
+            } else {
+                document.getElementById("show").style.display = "block";
+                document.getElementById("show").innerHTML = `<p>No record found for Roll No: ${roll}</p>`;
+            }
         }
     </script>
-    </body>
+</body>
 </html>
